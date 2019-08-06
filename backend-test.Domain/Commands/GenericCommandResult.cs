@@ -1,11 +1,12 @@
 using System;
 using backendtest.Shared.Commands;
 
-namespace backend_test.Domain.CustomerCommands.Inputs
+
+namespace backend_test.Domain.Commands
 {
-    public class CreateCustomerCommandResult : ICommandResult
+    public class GenericCommandResult : ICommandResult
     {
-        public CreateCustomerCommandResult(bool success, string message, object data)
+        public GenericCommandResult(bool success, string message, object data)
         {
             Success = success;
             Message = message;

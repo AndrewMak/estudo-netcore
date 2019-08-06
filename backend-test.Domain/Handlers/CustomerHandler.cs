@@ -1,4 +1,5 @@
-﻿using backend_test.Domain.CustomerCommands.Inputs;
+﻿using backend_test.Domain.Commands;
+using backend_test.Domain.CustomerCommands.Inputs;
 using backend_test.Domain.Repositories;
 using backend_test.Domain.Services;
 using backend_test.Domain.ValueObjects;
@@ -46,7 +47,7 @@ namespace backend_test.Domain.Handlers
             AddNotifications(customer.Notifications);
 
             if (Invalid)
-                return new CommandResult(
+                return new GenericCommandResult(
                     false,
                     "Por favor, corrija os campos abaixo",
                     Notifications);
@@ -58,7 +59,7 @@ namespace backend_test.Domain.Handlers
             _emailService.Send(email.Address, "hello@teste.com", "Bem vindo", "Seja bem vindo!");
 
             // Retornar o resultado para tela
-            return new CommandResult(true, "Bem vindo", new
+            return new GenericCommandResult(true, "Bem vindo", new
             {
                 Id = customer.Id,
                 Name = name.ToString(),
