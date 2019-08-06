@@ -2,8 +2,6 @@
 using backendtest.Shared.Commands;
 using Flunt.Notifications;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace backend_test.Domain.Handlers
 {
