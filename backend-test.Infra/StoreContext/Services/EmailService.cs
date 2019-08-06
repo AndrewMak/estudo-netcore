@@ -1,6 +1,6 @@
 using backend_test.Domain.Services;
 
-namespace BaltaStore.Infra.StoreContext.Services
+namespace backend_test.Infra.StoreContext.Services
 {
     public class EmailService : IEmailService
     {

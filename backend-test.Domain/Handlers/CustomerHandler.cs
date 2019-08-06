@@ -55,10 +55,10 @@ namespace backend_test.Domain.Handlers
             _repository.Save(customer);
 
             // Enviar um E-mail de boas vindas
-            _emailService.Send(email.Address, "hello@balta.io", "Bem vindo", "Seja bem vindo ao Balta Store!");
+            _emailService.Send(email.Address, "hello@teste.com", "Bem vindo", "Seja bem vindo!");
 
             // Retornar o resultado para tela
-            return new CommandResult(true, "Bem vindo ao balta Store", new
+            return new CommandResult(true, "Bem vindo", new
             {
                 Id = customer.Id,
                 Name = name.ToString(),
