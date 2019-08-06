@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using backend_test.Domain.Handlers;
+using backend_test.Domain.Repositories;
+using backend_test.Domain.Services;
+using backend_test.Infra.DataContexts;
+using backend_test.Infra.StoreContext.Repositories;
+using backend_test.Infra.StoreContext.Services;
+using backendtest.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +16,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace backend_test
 {
@@ -24,15 +32,17 @@ namespace backend_test
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-
+            services.AddScoped<DataContext, DataContext>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IEmailService, EmailService>();
+            services.AddTransient<CustomerHandler, CustomerHandler>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddResponseCompression();
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new Info { Title = "Balta Store", Version = "v1" });
+            });
+            Settings.ConnectionString = $"{Configuration["connectionString"]}";
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +51,11 @@ namespace backend_test
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Balta Store - V1");
+                });
             }
             else
             {
@@ -51,14 +66,9 @@ namespace backend_test
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvc();
+            app.UseResponseCompression();
         }
     }
 }
